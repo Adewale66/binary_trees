@@ -1,21 +1,8 @@
 CC = gcc
 SRC = $(wildcard *.c)
-OBJ = $(SRC:.c=.o)
-
-EXEC = main
-
 CFLAGS = -Wall -Wextra -Werror -pedantic
 
-all: $(EXEC)
+all: $(SRC)
+	$(CC) $(CFLAGS) $^
 
-%.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@
-
-$(EXEC): $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
-
-
-clean:
-	rm -f $(OBJ)
-
-.PHONY: all clean
+.PHONY: all
