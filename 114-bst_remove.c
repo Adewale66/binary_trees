@@ -20,13 +20,18 @@ bst_t *bst_remove(bst_t *root, int value)
 		root->right = bst_remove(root->right, value);
 	else
 	{
-		if (root->left == NULL)
+		if (root->left == NULL && root->right == NULL)
+		{
+			free(root);
+			return (NULL);
+		}
+		else if (root->left == NULL && root->right != NULL)
 		{
 			node = root->right;
 			free(root);
 			return (node);
 		}
-		else if (root->right == NULL)
+		else if (root->right == NULL && root->left != NULL)
 		{
 			node = root->left;
 			free(root);
