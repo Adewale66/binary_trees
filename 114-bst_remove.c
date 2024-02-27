@@ -9,9 +9,9 @@
 
 bst_t *bst_remove(bst_t *root, int value)
 {
-	bst_t *node;
+	bst_t *temp;
 
-	if (root == NULL)
+	if (!root)
 		return (NULL);
 
 	if (value < root->n)
@@ -20,28 +20,23 @@ bst_t *bst_remove(bst_t *root, int value)
 		root->right = bst_remove(root->right, value);
 	else
 	{
-		if (root->left == NULL && root->right == NULL)
+		if (!root->left)
 		{
+			temp = root->right;
 			free(root);
-			return (NULL);
+			return (temp);
 		}
-		else if (root->left == NULL && root->right != NULL)
+		else if (!root->right)
 		{
-			node = root->right;
+			temp = root->left;
 			free(root);
-			return (node);
+			return (temp);
 		}
-		else if (root->right == NULL && root->left != NULL)
-		{
-			node = root->left;
-			free(root);
-			return (node);
-		}
-		node = root->right;
-		while (node->left != NULL)
-			node = node->left;
-		root->n = node->n;
-		root->right = bst_remove(root->right, node->n);
+		temp = root->right;
+		while (temp->left)
+			temp = temp->left;
+		root->n = temp->n;
+		root->right = bst_remove(root->right, temp->n);
 	}
 	return (root);
 }
