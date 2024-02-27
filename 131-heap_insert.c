@@ -1,39 +1,61 @@
 #include "binary_trees.h"
 
-/**
- * heap_insert - inserts a value into a Max Binary Heap
- * @root: double pointer to the root node of the Heap
- * @value: value store in the node to be inserted
- * Return: pointer to the inserted node, or NULL on failure
- */
+heap_t *heap_insert(heap_t **root, int value);
+size_t binary_tree_size(const binary_tree_t *tree);
 
+/**
+ * heap_insert- Inserts a value in Max Binary Heap.
+ *
+ * @root: A double pointer to the root node of the Heap to insert the value.
+ * @value: The value to store in the node to be inserted.
+ *
+ * Return: A pointer to the created node, or NULL on failure.
+ */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	heap_t *new_node = NULL;
-	heap_t *parent = NULL;
-	heap_t *temp = NULL;
+	heap_t *tree, *new, *flip;
+	int size, leaves, sub, bit, level, tmp;
 
-	new_node = binary_tree_node(NULL, value);
-	if (!new_node)
+	if (!root)
 		return (NULL);
-	if (!*root)
+	if (!(*root))
+		return (*root = binary_tree_node(NULL, value));
+
+	tree = *root;
+	size = binary_tree_size(tree);
+	leaves = size;
+
+	for (level = 0, sub = 1; leaves >= sub; sub *= 2, level++)
+		leaves -= sub;
+	for (bit = 1 << (level - 1); bit != 1; bit >>= 1)
+		tree = leaves & bit ? tree->right : tree->left;
+
+	new = binary_tree_node(tree, value);
+	leaves & 1 ? (tree->right = new) : (tree->left = new);
+
+	flip = new;
+	for (; flip->parent && (flip->n > flip->parent->n); flip = flip->parent)
 	{
-		*root = new_node;
-		return (new_node);
+		tmp = flip->n;
+		flip->n = flip->parent->n;
+		flip->parent->n = tmp;
+		new = new->parent;
 	}
-	temp = *root;
-	while (temp)
-	{
-		parent = temp;
-		if (temp->n < value)
-			temp = temp->left;
-		else
-			temp = temp->right;
-	}
-	new_node->parent = parent;
-	if (parent->left == NULL)
-		parent->left = new_node;
-	else
-		parent->right = new_node;
-	return (new_node);
+
+	return (new);
+}
+
+/**
+ * binary_tree_size - Measures the size of a binary tree.
+ *
+ * @tree: A pointer to the tree to be measured.
+ *
+ * Return: Size of the tree, 0 if tree is NULL
+ */
+size_t binary_tree_size(const binary_tree_t *tree)
+{
+	if (!tree)
+		return (0);
+
+	return (binary_tree_size(tree->left) + binary_tree_size(tree->right) + 1);
 }
