@@ -68,7 +68,7 @@ void free_queue(queue *head)
 }
 
 /**
- * binarty_tree_is_complete - checks if a binary tree is complete
+ * binary_tree_is_complete - checks if a binary tree is complete
  * @tree: pointer to the root node of the tree to check
  * Return: 1 if complete, 0 if not
  */
